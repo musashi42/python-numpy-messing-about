@@ -5,14 +5,14 @@ import re
 import sys
 import warnings
 
-warnings.filterwarnings('ignore')
+warnings.filterwarnings('ignore')  # has to be done otherwise due to later part of the code it will pop a warning
 #from textops import *
 
 #empty list to store template images
 template_data=[]
 template_names = []
-#make a list of all template images from a directory
-files1= glob.glob('cmp-*[*.png')
+#make a list of all template images from a directory, my images were named as per cards cmp-[Ac].png for Ace of Clubs, etc.
+files1= glob.glob('cmp-[*.png')  
 
 class MyImage:
     def __init__(self, img_name):
@@ -29,7 +29,7 @@ for myfile in files1:
     template_names.append(image_name)
     #print(image, image_name)
 
-test_image = cv2.imread('og2-test.png')
+test_image = cv2.imread('og2-test.png') # a poker table w/ some cards shown as a way to test how well the code will detect the shown cards
 test_image = cv2.cvtColor(test_image, cv2.COLOR_BGR2GRAY)
 
 
@@ -54,7 +54,7 @@ for tmp in template_data:
     top_left = max_loc
     bottom_right = (top_left[0] + tW, top_left[1] + tH)
     #cv2.rectangle(test_image,top_left, bottom_right, 255, 2)
-    threshold = 0.94
+    threshold = 0.94 # the bigger the number the less precise, 94 seems to be alright, sort of
     #flag = False
    
     if np.amax(result) > threshold:
@@ -62,6 +62,7 @@ for tmp in template_data:
         otherres = cv2.rectangle(test_image,top_left, bottom_right, 75, 2)
         #print(otherres[0])
         #print(tmp[0])
+        ## THE FOLLOWING LOOP IS THE REASON FOR SUPRESSED WARNING EARLIER, BUT THIS IS THE ONLY WAY I FIGURED TO EXTRACT NAMES OF MATCHED TEMPLATES
         for stuff in files1:
             #print(stuff)
             stuffs = cv2.imread(stuff,0)
@@ -77,6 +78,7 @@ for tmp in template_data:
             
             #print('\n'.join(cat(x) | grep(spl_char)))
             ###print(str(res))
+            ### THE FOLLOWING IS EXTRACTING THE NAMES AND PRINTING THEM IN THE CONSOLE OUTPUT
             if re.search(spl_char, x):
                 spl_char2 = "g\[ "
                 if re.search(spl_char2, x):
@@ -114,5 +116,5 @@ for tmp in template_data:
         #print(tmp, image_name)
     
             
-cv2.imshow('Result',test_image)
+cv2.imshow('Result',test_image) # not needed for what I wanted to make with this, it's more for debugging, determining how properly found matches have been detected
 cv2.waitKey(0)
