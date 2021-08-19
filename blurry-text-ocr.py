@@ -10,8 +10,8 @@ warnings.filterwarnings('ignore')
 #from textops import *
 
 #empty list to store template images
-image = cv2.imread('ocr-test.png', cv2.IMREAD_COLOR )
-template = cv2.imread('cp-d[d].png', cv2.IMREAD_COLOR)
+image = cv2.imread('ocr-test.png', cv2.IMREAD_COLOR)  # the image with somewhat blurry text (meaning a human eye can somewhat figure out each letter)
+template = cv2.imread('cp-d[d].png', cv2.IMREAD_COLOR) # somewhat blurry letter (meaning, it's a known letter w/o mistake) to try and find all instances of
 
 
 h, w = template.shape[:2]
@@ -47,4 +47,4 @@ while max_val > threshold:
         res[start_row: end_row, start_col: end_col] = 0
         image = cv2.rectangle(image,(max_loc[0],max_loc[1]), (max_loc[0]+w+1, max_loc[1]+h+1), (0,255,0) )
 
-cv2.imwrite('output.png', image)
+cv2.imwrite('output.png', image) # final image w/ all the matched instances marked
